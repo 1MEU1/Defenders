@@ -1,0 +1,57 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyHealth : MonoBehaviour
+{
+    public int Starthealth = 100;
+    public int currenthealth;
+    public AudioClip deathsound;
+
+    private ParticleSystem particle;
+    private Animator anim;
+    private AudioSource audio;
+    private bool isDead;
+    private CapsuleCollider col;
+    private enemymovement enemymove;
+
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+        audio = GetComponent<AudioSource>();
+        particle = GetComponentInChildren<ParticleSystem>();
+        col = GetComponent<CapsuleCollider>();
+        enemymove = GetComponent<enemymovement>();
+        currenthealth = Starthealth;
+    } 
+
+    public void Etakedamage(int dmg,Vector3 hitPoint)
+    {
+        if (isDead)
+            return;
+
+        audio.Play();
+        currenthealth -= dmg;
+
+        particle.transform.position = hitPoint;
+        particle.Play();
+
+        if (currenthealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        isDead = true;
+        //col.enabled = false;
+        enemymove.enabled = false;
+        //col.isTrigger = false;
+        anim.SetTrigger("Enemydead");
+        audio.clip = deathsound;
+        audio.Play();
+    }
+
+}
