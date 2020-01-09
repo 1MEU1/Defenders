@@ -1,0 +1,70 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+
+public class PlayerHealth : MonoBehaviour
+{
+    public int StartHaelth = 100;
+    public int CurrHealth;
+    public Slider healthSlider;
+    public AudioClip deathSounds;
+    public Image hurtImg;
+    public float speed = 0.2f;
+
+    private AudioSource audio;
+    private bool isdead, hurt;
+
+        
+
+    private void Awake()
+    {
+        CurrHealth = StartHaelth;
+        audio = GetComponent<AudioSource>();
+    }
+
+    
+    void Update()
+    {
+        if(hurt)
+        {
+            hurtImg.color = new Color(0.3f, 0.1f, 0.1f, 0.2f);
+        }
+
+        else
+        {
+            hurtImg.color = Color.Lerp(hurtImg.color, Color.clear, speed * Time.deltaTime);
+        }
+
+        hurt = false;
+        
+    }
+    public void TakeDamage(int damage)
+    {
+        hurt = true;
+        CurrHealth -= damage;
+        healthSlider.value = CurrHealth;
+
+        audio.Play();
+
+        if(CurrHealth <= 0 && !isdead)
+        {
+            Die();
+        }
+       
+    }
+
+    private void Die()
+    {
+        isdead = true;
+
+        transform.gameObject.SetActive(false);
+
+        audio.clip = deathSounds;
+        audio.Play();
+    }
+
+
+
+}
