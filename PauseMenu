@@ -1,0 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class PauseMenu : MonoBehaviour
+{
+    public GameObject puasemenu;
+
+    private bool gamePaused = false;
+
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gamePaused = !gamePaused;
+        }
+
+        if (gamePaused)
+        {
+            Time.timeScale = 0f;
+            puasemenu.SetActive(true);
+        }
+        if (!gamePaused)
+        {
+            Time.timeScale = 1f;
+            puasemenu.SetActive(false);
+        }
+
+    }
+
+    public void rasumebutton()
+    {
+        gamePaused = false;
+    }
+    
+    public void quitbutton()
+    {
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        Application.Quit();
+        #endif
+
+    }
+
+    public void mainmanu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+}
