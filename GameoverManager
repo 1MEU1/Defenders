@@ -1,0 +1,55 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameoverManager : MonoBehaviour
+{
+    public PlayerHealth playerHealth;
+    public GameObject restart, mainmanu, quit;
+    //public timer timer1;
+
+
+    private Animator anim;
+
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();   
+    }
+
+    
+    void Update()
+    {
+
+        if (playerHealth.CurrHealth<=0)
+        {
+            //timer1.enabled = false;
+            anim.SetTrigger("gameover");
+            restart.SetActive(true);
+            mainmanu.SetActive(true);
+            quit.SetActive(true);
+
+        }
+        
+    }
+
+    public void mainmanus()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void quits()
+    {
+       #if UNITY_EDITOR
+         UnityEditor.EditorApplication.isPlaying = false;
+       #else
+         Application.Quit();
+       #endif
+    }
+
+    public void Restarts()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+}
