@@ -1,0 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Camerafollow : MonoBehaviour
+{
+
+    public Transform player;
+    public float height, lenght;
+    public float damp, rotationDamp;
+    
+    void Start()
+    {
+        
+    }
+
+    
+    private void FixedUpdate()
+    {
+
+        Vector3 nextPos = player.TransformPoint(0, height, -lenght);
+        transform.position = Vector3.Lerp(transform.position, nextPos, damp * Time.deltaTime);
+
+        Vector3 dif = player.position - transform.position;
+        Quaternion nextRot = Quaternion.LookRotation(dif, player.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, nextRot, rotationDamp * Time.deltaTime);
+
+    }
+}
