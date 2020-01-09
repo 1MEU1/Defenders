@@ -1,0 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Displayhighscore : MonoBehaviour
+{
+
+    private Text highScore;
+    private float score;
+
+    void Start()
+    {
+        highScore = GetComponent<Text>();
+        score = PlayerPrefs.GetFloat("Highscore");
+        highScore.text = " " + score.ToString("0.0.0") + "  Seconds";
+
+    }
+   
+}
