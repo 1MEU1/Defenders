@@ -50,7 +50,7 @@ public class Playermovement : MonoBehaviour
         if (Physics.Raycast(ray, out hit, distance, mylayer))
         {
             Vector3 dir = hit.point - transform.position;
-            Quaternion newRot = Quaternion.LookRotation(dir);
+            Quaternion newRot = Quaternion.LookRotation(dir,transform.up);
             Quaternion smootRot = Quaternion.Slerp(transform.rotation, newRot, turnspeed * Time.deltaTime);
             rigid.MoveRotation(smootRot);
         }
