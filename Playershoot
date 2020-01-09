@@ -1,0 +1,76 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Playershoot : MonoBehaviour
+{
+    public float nextfire = 0.2f;
+    public int damage = 25;
+    public float distance = 100f;
+
+    private float timer;
+    private AudioSource audio;
+    private ParticleSystem particle;
+    private Light light;
+    private LineRenderer line;
+    private float effecttime = 0.2f;
+
+    private void Awake()
+    {
+        audio = GetComponent<AudioSource>();
+        particle = GetComponent<ParticleSystem>();
+        light = GetComponent<Light>();
+        line = GetComponent<LineRenderer>();
+    }
+
+    private void FixedUpdate()
+    {
+        timer += Time.deltaTime;
+
+        if (Input.GetButton ("Fire1") && timer > nextfire)
+        {
+            Shoot();
+        }
+        
+
+        if(timer > nextfire * effecttime)
+        {
+            line.enabled = false;
+            light.enabled = false;
+            
+
+        }
+    }
+
+    private void Shoot()
+    {
+        timer = 0f;
+
+        audio.Play();
+        light.enabled = true;
+        particle.Stop();
+        particle.Play();
+
+        line.enabled = true;
+        line.SetPosition(0, transform.position);
+
+        Ray ray = new Ray();
+        RaycastHit hit;
+        ray.origin = transform.position;
+        ray.direction = transform.forward;
+
+
+        if (Physics.Raycast(ray,out hit,distance))
+        {
+            EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.Etakedamage(damage, hit.point);
+            }
+        }
+
+        line.SetPosition(1, hit.point);
+        
+    }
+
+}
