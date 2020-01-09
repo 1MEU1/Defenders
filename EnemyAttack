@@ -1,0 +1,82 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyAttack : MonoBehaviour
+{
+    public float nextFire = 0.5f;
+    public int attackdmg = 10;
+
+    private PlayerHealth playerhealth;
+    private float timer;
+    private bool attackDistance;
+    private Animator anim;
+    private enemymovement movament;
+    private bool attack;
+    private EnemyHealth enemyHealth;
+
+
+
+    private void Awake()
+    {
+        playerhealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        anim = GetComponent<Animator>();
+        movament = GetComponent<enemymovement>();
+        enemyHealth = GetComponent<EnemyHealth>();
+
+        
+    }
+
+    
+    private void FixedUpdate()
+    {
+        timer += Time.deltaTime;
+
+        if(timer > nextFire && attackDistance && attack && enemyHealth.currenthealth > 0)
+        {
+            Attack();
+        }
+
+        anim.SetBool("Attack", attack);
+
+        if(playerhealth.CurrHealth <=0)
+        {
+            attack = false;
+            anim.SetTrigger("Playerdead");
+            movament.enabled = false;
+
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            attackDistance = true;
+            attack = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Player")
+        {
+            attackDistance = false;
+            attack = false;
+        }
+    }
+
+
+    private void Attack()
+    {
+        timer = 0f;
+
+        anim.SetBool("Attack", attack);
+
+        if(playerhealth.CurrHealth >=0 )
+        {
+            playerhealth.TakeDamage(attackdmg);
+        }
+    }
+}
